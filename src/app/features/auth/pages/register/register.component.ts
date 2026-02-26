@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -35,8 +35,30 @@ export class RegisterComponent implements OnInit {
     roleId: ['', [Validators.required]] // Mandatory select
   });
 
+  passwordStrength = signal<number>(0);
+
+  strengthLabel = computed(() => {
+    const s = this.passwordStrength();
+    if (s === 0) return '';
+    if (s < 40) return 'Weak';
+    if (s < 70) return 'Medium';
+    return 'Strong';
+  });
+
+  strengthColor = computed(() => {
+    const s = this.passwordStrength();
+    if (s < 40) return 'bg-red-500';
+    if (s < 70) return 'bg-amber-500 transition-colors duration-500';
+    return 'bg-emerald-500 transition-colors duration-500';
+  });
+
   ngOnInit(): void {
     this.loadRoles();
+
+    // Listen to password changes for strength meter
+    this.registerForm.get('password')?.valueChanges.subscribe(val => {
+      this.calculateStrength(val || '');
+    });
   }
 
   loadRoles(): void {
@@ -44,6 +66,37 @@ export class RegisterComponent implements OnInit {
       next: (data) => this.roles.set(data),
       error: (err) => console.error('Error fetching roles', err)
     });
+  }
+
+  calculateStrength(pwd: string): void {
+    if (!pwd) {
+      this.passwordStrength.set(0);
+      return;
+    }
+
+    const hasLetters = /[a-z]/i.test(pwd);
+    const hasNumbers = /[0-9]/.test(pwd);
+    const hasUpper = /[A-Z]/.test(pwd);
+    const hasLower = /[a-z]/.test(pwd);
+    const hasSpecial = /[^A-Za-z0-9]/.test(pwd);
+
+    let score = 0;
+
+    // Weak: Only letters OR only numbers
+    if ((hasLetters && !hasNumbers) || (!hasLetters && hasNumbers)) {
+      score = Math.min(pwd.length * 4, 35); // Max 35% for weak
+    }
+    // Medium: Letters AND numbers
+    else if (hasLetters && hasNumbers) {
+      score = 40 + Math.min(pwd.length * 2, 25); // Starts at 40%, max 65% for medium
+
+      // Strong: Numbers, Caps, Small, and Special
+      if (hasUpper && hasLower && hasSpecial) {
+        score = 70 + Math.min(pwd.length * 2, 30); // Starts at 70%, max 100%
+      }
+    }
+
+    this.passwordStrength.set(Math.min(score, 100));
   }
 
   onSubmit(): void {
