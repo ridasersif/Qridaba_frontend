@@ -39,30 +39,31 @@
 }
 
 .dark {
-  /* "Khfif" Theme - Soft, Premium Dark (Zinc-based) */
-  --surface-50: #09090b;
-  /* Zinc 950 - Soft dark background */
-  --surface-100: #18181b;
-  /* Zinc 900 - Slightly lighter for components */
-  --surface-200: #27272a;
-  /* Zinc 800 - Borders/Dividers */
-  --surface-300: #3f3f46;
-  /* Zinc 700 - Hover states */
-  --surface-400: #71717a;
-  /* Zinc 500 - Muted text/Icons */
-  --surface-500: #a1a1aa;
-  /* Zinc 400 - Secondary text */
-  --surface-600: #d4d4d8;
-  /* Zinc 300 - Readable text */
-  --surface-700: #e4e4e7;
-  /* Zinc 200 - Close-to-primary text */
-  --surface-800: #f4f4f5;
-  /* Zinc 100 - High contrast text */
-  --surface-900: #fafafa;
-  /* Zinc 50 - Strongest text */
+  /* GitHub-inspired Premium Dark Palette */
+  --surface-50: #0d1117;
+  /* Main background (Charcoal) */
+  --surface-100: #161b22;
+  /* Card / Component background */
+  --surface-200: #21262d;
+  /* Hover / Lighter components */
+  --surface-300: #30363d;
+  /* Borders / Dividers */
+  --surface-400: #484f58;
+  /* Muted borders / Secondary hover */
+  --surface-500: #6e7681;
+  /* Muted text / Icons */
+  --surface-600: #8b949e;
+  /* Secondary text */
+  --surface-700: #b1bac4;
+  /* Meta text */
+  --surface-800: #c9d1d9;
+  /* Standard text */
+  --surface-900: #f0f6fc;
+  /* Strong text */
   --surface-950: #ffffff;
+  /* Pure white */
 
-  --auth-gradient: linear-gradient(135deg, #09090b 0%, #110000 40%, #1a0505 100%);
+  --auth-gradient: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
 }
 
 body {

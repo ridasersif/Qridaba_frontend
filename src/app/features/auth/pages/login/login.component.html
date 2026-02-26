@@ -1,8 +1,7 @@
-<!-- Login Page -->
 <div class="animate-fade-in">
     <!-- Header -->
     <div class="mb-8">
-        <h2 class="text-3xl font-bold text-surface-900 mb-2">Welcome back 👋</h2>
+        <h2 class="text-3xl font-bold text-surface-900 dark:text-white mb-2">Welcome back 👋</h2>
         <p class="text-surface-600 dark:text-surface-400">Sign in to your account to continue</p>
     </div>
 
@@ -33,7 +32,7 @@
                     </svg>
                 </div>
                 <input type="email" formControlName="email" placeholder="you@example.com"
-                    class="w-full pl-12 pr-4 py-3.5 rounded-xl bg-surface-100 dark:bg-surface-100 border border-surface-200 dark:border-surface-800 text-surface-900 placeholder-surface-400 dark:placeholder-surface-500 text-sm outline-none transition-all duration-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
+                    class="w-full pl-12 pr-4 py-3.5 rounded-xl bg-surface-100 dark:bg-surface-100 border border-surface-200 dark:border-surface-800 text-surface-900 dark:text-white placeholder-surface-400 dark:placeholder-surface-500 text-sm outline-none transition-all duration-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
                     [ngClass]="{
             'border-primary-500/50 bg-primary-500/5': loginForm.get('email')?.invalid && loginForm.get('email')?.touched,
             'border-primary-600/50 bg-primary-600/5': loginForm.get('email')?.valid && loginForm.get('email')?.touched
@@ -65,7 +64,7 @@
                     </svg>
                 </div>
                 <input [type]="showPassword() ? 'text' : 'password'" formControlName="password" placeholder="••••••••"
-                    class="w-full pl-12 pr-12 py-3.5 rounded-xl bg-surface-100 dark:bg-surface-100 border border-surface-200 dark:border-surface-800 text-surface-900 placeholder-surface-400 dark:placeholder-surface-500 text-sm outline-none transition-all duration-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
+                    class="w-full pl-12 pr-12 py-3.5 rounded-xl bg-surface-100 dark:bg-surface-100 border border-surface-200 dark:border-surface-800 text-surface-900 dark:text-white placeholder-surface-400 dark:placeholder-surface-500 text-sm outline-none transition-all duration-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
                     [ngClass]="{
             'border-primary-500/50 bg-primary-500/5': loginForm.get('password')?.invalid && loginForm.get('password')?.touched,
             'border-primary-600/50 bg-primary-600/5': loginForm.get('password')?.valid && loginForm.get('password')?.touched
