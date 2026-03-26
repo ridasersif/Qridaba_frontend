@@ -3,9 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
 import { StorageService } from './storage.service';
 import { Observable, tap } from 'rxjs';
-import { 
-  AuthenticationResponse, LoginRequest, RegisterRequest, 
-  VerificationRequest, ForgotPasswordRequest, ResetPasswordRequest, MessageResponse 
+import {
+  AuthenticationResponse, LoginRequest, RegisterRequest,
+  VerificationRequest, ForgotPasswordRequest, ResetPasswordRequest, MessageResponse
 } from '../models/auth.model';
 import { ApiResponse } from '../models/api-response.model';
 
@@ -15,7 +15,7 @@ export class AuthService {
   private storage = inject(StorageService);
   private readonly API_URL = `${environment.apiUrl}/auth`;
 
- 
+
   currentUser = signal(this.storage.getUser());
 
   // --- 1. Register ---
@@ -25,7 +25,7 @@ export class AuthService {
 
   // --- 2. Login ---
   login(data: LoginRequest) {
-    return this.http.post<AuthenticationResponse>(`${this.API_URL}/authenticate`, data)
+    return this.http.post<AuthenticationResponse>(`${this.API_URL}/login`, data)
       .pipe(tap(res => this.handleSuccess(res)));
   }
 
@@ -33,8 +33,8 @@ export class AuthService {
 
 
   verifyEmail(request: VerificationRequest): Observable<ApiResponse<any>> {
-  return this.http.post<ApiResponse<any>>(`${this.API_URL}/verify-email`, request);
-}
+    return this.http.post<ApiResponse<any>>(`${this.API_URL}/verify-email`, request);
+  }
 
   // --- 4. Forgot Password ---
   forgotPassword(data: ForgotPasswordRequest) {

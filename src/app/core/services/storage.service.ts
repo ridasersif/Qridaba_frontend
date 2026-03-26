@@ -7,19 +7,26 @@ export class StorageService {
   private readonly REFRESH_TOKEN = 'refresh_token';
   private readonly USER_KEY = 'auth_user';
 
-  saveAuthData(res: any): void {
-    localStorage.setItem(this.ACCESS_TOKEN, res.access_token);
-    localStorage.setItem(this.REFRESH_TOKEN, res.refresh_token);
-    localStorage.setItem(this.USER_KEY, JSON.stringify(res.user));
+  private isBrowser(): boolean {
+    return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
   }
 
-  getAccessToken(): string | null { return localStorage.getItem(this.ACCESS_TOKEN); }
-  getRefreshToken(): string | null { return localStorage.getItem(this.REFRESH_TOKEN); }
+  saveAuthData(res: any): void {
+    if (this.isBrowser()) {
+      localStorage.setItem(this.ACCESS_TOKEN, res.access_token);
+      localStorage.setItem(this.REFRESH_TOKEN, res.refresh_token);
+      localStorage.setItem(this.USER_KEY, JSON.stringify(res.user));
+    }
+  }
+
+  getAccessToken(): string | null { return this.isBrowser() ? localStorage.getItem(this.ACCESS_TOKEN) : null; }
+  getRefreshToken(): string | null { return this.isBrowser() ? localStorage.getItem(this.REFRESH_TOKEN) : null; }
   
   getUser(): UserResponse | null {
+    if (!this.isBrowser()) return null;
     const user = localStorage.getItem(this.USER_KEY);
     return user ? JSON.parse(user) : null;
   }
 
-  clear(): void { localStorage.clear(); }
+  clear(): void { if (this.isBrowser()) localStorage.clear(); }
 }

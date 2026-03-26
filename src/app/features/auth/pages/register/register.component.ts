@@ -63,8 +63,8 @@ export class RegisterComponent implements OnInit {
 
   loadRoles(): void {
     this.roleService.getAssignableRoles().subscribe({
-      next: (data) => this.roles.set(data),
-      error: (err) => console.error('Error fetching roles', err)
+      next: (data: RoleResponse[]) => this.roles.set(data),
+      error: (err: any) => console.error('Error fetching roles', err)
     });
   }
 

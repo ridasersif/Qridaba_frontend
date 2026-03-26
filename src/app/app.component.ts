@@ -26,10 +26,10 @@ export class AppComponent {
     console.log('--- Fetching Roles from Spring Boot ---');
 
     this.roleService.getAssignableRoles().subscribe({
-      next: (roles) => {
+      next: (roles: any) => {
         console.log('✅ Success! Roles received:', roles);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('❌ Error fetching roles:', err);
         // Ici tu peux voir si c'est un problème de CORS ou de 403 Forbidden
       }
