@@ -63,7 +63,11 @@ export class RegisterComponent implements OnInit {
 
   loadRoles(): void {
     this.roleService.getAssignableRoles().subscribe({
-      next: (data: RoleResponse[]) => this.roles.set(data),
+      next: (res: any) => {
+        this.roles.set(res.data)
+        console.log(this.roles());
+      },
+      
       error: (err: any) => console.error('Error fetching roles', err)
     });
   }
@@ -104,6 +108,7 @@ export class RegisterComponent implements OnInit {
       this.isLoading.set(true);
       this.serverErrors.set({});
 
+      console.log(this.registerForm.value);
       const request: RegisterRequest = this.registerForm.value as RegisterRequest;
 
       this.authService.register(request).subscribe({

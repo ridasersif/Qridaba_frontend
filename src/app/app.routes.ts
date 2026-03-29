@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AppLayoutComponent } from './layouts/app-layout/app-layout.component';
 import { DashboardLayoutComponent } from './layouts/dashboard-layout/dashboard-layout.component';
 import { HomeComponent } from './features/home/home.component';
+import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
     {
@@ -21,6 +22,8 @@ export const routes: Routes = [
     {
         path: 'admin',
         component: DashboardLayoutComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN'] },
         children: [
             {
                 path: 'dashboard',
@@ -61,6 +64,35 @@ export const routes: Routes = [
             {
                 path: 'roles/:id',
                 loadComponent: () => import('./pages/admin/roles/role-form/role-form.component').then(m => m.RoleFormComponent)
+            },
+            {
+                path: '',
+                redirectTo: 'dashboard',
+                pathMatch: 'full'
+            }
+        ]
+    },
+    {
+        path: 'owner',
+        component: DashboardLayoutComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['OWNER'] },
+        children: [
+            {
+                path: 'dashboard',
+                loadComponent: () => import('./pages/admin/dashboard/dashboard.component').then(m => m.DashboardComponent) // Placeholder owner dashboard
+            },
+            {
+                path: 'items',
+                loadComponent: () => import('./pages/owner/items/item-list/item-list.component').then(m => m.ItemListComponent)
+            },
+            {
+                path: 'items/new',
+                loadComponent: () => import('./pages/owner/items/item-form/item-form.component').then(m => m.ItemFormComponent)
+            },
+            {
+                path: 'items/:id',
+                loadComponent: () => import('./pages/owner/items/item-form/item-form.component').then(m => m.ItemFormComponent)
             },
             {
                 path: '',

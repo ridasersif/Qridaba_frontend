@@ -1,0 +1,256 @@
+<div class="space-y-8 max-w-6xl mx-auto pb-12">
+  
+  <!-- Premium Header Container -->
+  <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none p-8 sm:p-10 z-10">
+    <div class="absolute -top-24 -right-24 w-96 h-96 bg-gradient-to-br from-blue-100/40 to-indigo-100/40 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-full blur-3xl mix-blend-multiply opacity-70 pointer-events-none"></div>
+    <div class="absolute bottom-0 -left-10 w-72 h-72 bg-gradient-to-tr from-purple-100/40 to-pink-100/40 dark:from-purple-900/20 dark:to-pink-900/20 rounded-full blur-3xl mix-blend-multiply opacity-70 pointer-events-none"></div>
+    
+    <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+      <a [routerLink]="['/owner/items']" class="p-3.5 bg-slate-50 hover:bg-white dark:bg-slate-900/50 dark:hover:bg-slate-700 text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-x-1 flex-shrink-0 group">
+        <span class="iconify text-2xl transform group-hover:-translate-x-0.5 transition-transform" data-icon="lucide:arrow-left"></span>
+      </a>
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-bold tracking-wide uppercase mb-3">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+          </span>
+          Inventory Management
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-2 tracking-tight">{{ isEditMode ? 'Edit Equipment' : 'Publish New Item' }}</h1>
+        <p class="text-slate-500 dark:text-slate-400 text-base max-w-2xl font-medium">Add equipment descriptions, pricing, and high-quality images to your inventory.</p>
+      </div>
+    </div>
+  </div>
+
+  <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="space-y-8 relative z-20">
+    <!-- Loader overlay -->
+    <div *ngIf="loading" class="absolute inset-0 bg-white/60 dark:bg-slate-900/60 z-50 flex items-center justify-center backdrop-blur-sm rounded-3xl">
+      <div class="px-6 py-4 bg-white dark:bg-slate-800 rounded-2xl shadow-xl flex items-center gap-4 border border-slate-100 dark:border-slate-700">
+          <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <span class="text-slate-700 dark:text-slate-200 font-bold text-lg">Processing...</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <!-- Left Column: Settings -->
+      <div class="lg:col-span-8 space-y-8">
+        
+        <!-- General Info Card -->
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden group">
+          <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          
+          <div class="flex flex-wrap items-center gap-4 mb-8 border-b border-slate-100 dark:border-slate-700 pb-5">
+            <div class="p-3 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl">
+              <span class="iconify text-2xl" data-icon="lucide:file-text"></span>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-slate-800 dark:text-white">Basic Information</h3>
+              <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">What are you renting out?</p>
+            </div>
+          </div>
+
+          <div class="space-y-7">
+            <!-- Title -->
+            <div>
+              <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2.5">Title <span class="text-rose-500">*</span></label>
+              <input type="text" formControlName="title" placeholder="e.g. Sony A7 III Professional Camera" 
+                     [ngClass]="{'border-rose-400 focus:border-rose-500 focus:ring-rose-500/20': itemForm.get('title')?.invalid && itemForm.get('title')?.touched, 'border-slate-200 dark:border-slate-700/80 focus:border-blue-500 focus:ring-blue-500/20 hover:border-slate-300': !(itemForm.get('title')?.invalid && itemForm.get('title')?.touched)}"
+                     class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-900/50 border text-slate-900 dark:text-white rounded-2xl focus:ring-4 transition-all font-medium">
+              <div *ngIf="itemForm.get('title')?.invalid && itemForm.get('title')?.touched" class="mt-2.5 text-rose-500 text-sm font-bold flex items-center gap-1.5 animate-in slide-in-from-top-1 fade-in duration-200">
+                <span class="iconify" data-icon="lucide:alert-circle"></span> Please enter a valid title (min 5 characters).
+              </div>
+            </div>
+            
+            <!-- Category and Condition -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2.5">Category <span class="text-rose-500">*</span></label>
+                 <select formControlName="categoryId" 
+                         [ngClass]="{'border-rose-400 focus:border-rose-500 focus:ring-rose-500/20': itemForm.get('categoryId')?.invalid && itemForm.get('categoryId')?.touched, 'border-slate-200 dark:border-slate-700/80 focus:border-blue-500 focus:ring-blue-500/20': !(itemForm.get('categoryId')?.invalid && itemForm.get('categoryId')?.touched)}"
+                         class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-900/50 border text-slate-900 dark:text-white rounded-2xl focus:ring-4 transition-all font-medium appearance-none">
+                    <option value="">Select Category</option>
+                    <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+                 </select>
+                 <div *ngIf="itemForm.get('categoryId')?.invalid && itemForm.get('categoryId')?.touched" class="mt-2.5 text-rose-500 text-sm font-bold flex items-center gap-1.5 animate-in slide-in-from-top-1 fade-in duration-200">
+                   <span class="iconify" data-icon="lucide:alert-circle"></span> Category is required.
+                 </div>
+              </div>
+              
+              <div>
+                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2.5">Condition <span class="text-rose-500">*</span></label>
+                 <select formControlName="itemCondition" 
+                         [ngClass]="{'border-rose-400 focus:border-rose-500 focus:ring-rose-500/20': itemForm.get('itemCondition')?.invalid && itemForm.get('itemCondition')?.touched, 'border-slate-200 dark:border-slate-700/80 focus:border-blue-500 focus:ring-blue-500/20': !(itemForm.get('itemCondition')?.invalid && itemForm.get('itemCondition')?.touched)}"
+                         class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-900/50 border text-slate-900 dark:text-white rounded-2xl focus:ring-4 transition-all font-medium appearance-none">
+                    <option value="">Select Condition</option>
+                    <option *ngFor="let cond of conditions" [value]="cond">{{ cond }}</option>
+                 </select>
+                 <div *ngIf="itemForm.get('itemCondition')?.invalid && itemForm.get('itemCondition')?.touched" class="mt-2.5 text-rose-500 text-sm font-bold flex items-center gap-1.5 animate-in slide-in-from-top-1 fade-in duration-200">
+                   <span class="iconify" data-icon="lucide:alert-circle"></span> Condition is required.
+                 </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2.5">Brand</label>
+                 <input type="text" formControlName="brand" placeholder="e.g. Sony" class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium">
+              </div>
+              
+              <div>
+                 <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2.5">Model</label>
+                 <input type="text" formControlName="model" placeholder="e.g. A7 III" class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium">
+              </div>
+            </div>
+            
+            <!-- Description -->
+            <div>
+              <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2.5">Description</label>
+              <textarea formControlName="description" rows="5" placeholder="Detailed description of the item and included accessories..." 
+                        class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium custom-scrollbar resize-y"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Location Card -->
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden group">
+          <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-green-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          
+          <div class="flex flex-wrap items-center gap-4 mb-8 border-b border-slate-100 dark:border-slate-700 pb-5">
+            <div class="p-3 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-2xl">
+              <span class="iconify text-2xl" data-icon="lucide:map-pin"></span>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-slate-800 dark:text-white">Location</h3>
+              <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">Where is this item located?</p>
+            </div>
+          </div>
+
+          <div class="space-y-7">
+            <div>
+              <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2.5">City <span class="text-rose-500">*</span></label>
+              <input type="text" formControlName="city" placeholder="e.g. Casablanca, Rabat" 
+                     [ngClass]="{'border-rose-400 focus:border-rose-500 focus:ring-rose-500/20': itemForm.get('city')?.invalid && itemForm.get('city')?.touched, 'border-slate-200 dark:border-slate-700/80 focus:border-emerald-500 focus:ring-emerald-500/20 hover:border-slate-300': !(itemForm.get('city')?.invalid && itemForm.get('city')?.touched)}"
+                     class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-900/50 border text-slate-900 dark:text-white rounded-2xl focus:ring-4 transition-all font-medium">
+              <div *ngIf="itemForm.get('city')?.invalid && itemForm.get('city')?.touched" class="mt-2.5 text-rose-500 text-sm font-bold flex items-center gap-1.5 animate-in slide-in-from-top-1 fade-in duration-200">
+                <span class="iconify" data-icon="lucide:alert-circle"></span> City is required.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Pricing & Images -->
+      <div class="lg:col-span-4 space-y-8">
+        
+        <!-- Pricing Card -->
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-visible group">
+          <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-amber-400 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+          <div class="flex flex-wrap items-center gap-4 mb-8 border-b border-slate-100 dark:border-slate-700 pb-5">
+            <div class="p-3 bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-2xl">
+              <span class="iconify text-2xl" data-icon="lucide:circle-dollar-sign"></span>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-slate-800 dark:text-white">Pricing</h3>
+              <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">Set your rental rates.</p>
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            <div>
+              <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2.5">Price Per Day (MAD) <span class="text-rose-500">*</span></label>
+              <div class="relative flex items-center">
+                <div class="absolute left-4 font-bold text-slate-500">MAD</div>
+                <input type="number" formControlName="pricePerDay" placeholder="e.g. 150" 
+                       [ngClass]="{'border-rose-400 focus:border-rose-500 focus:ring-rose-500/20': itemForm.get('pricePerDay')?.invalid && itemForm.get('pricePerDay')?.touched, 'border-slate-200 dark:border-slate-700/80 focus:border-orange-500 focus:ring-orange-500/20 hover:border-slate-300': !(itemForm.get('pricePerDay')?.invalid && itemForm.get('pricePerDay')?.touched)}"
+                       class="w-full pl-14 pr-5 py-4 bg-slate-50 dark:bg-slate-900/50 border text-slate-900 dark:text-white rounded-2xl focus:ring-4 transition-all font-bold text-lg">
+              </div>
+              <div *ngIf="itemForm.get('pricePerDay')?.invalid && itemForm.get('pricePerDay')?.touched" class="mt-2.5 text-rose-500 text-sm font-bold flex items-center gap-1.5 animate-in slide-in-from-top-1 fade-in duration-200">
+                <span class="iconify" data-icon="lucide:alert-circle"></span> A valid price is required.
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2.5">Security Deposit (MAD)</label>
+              <div class="relative flex items-center">
+                <div class="absolute left-4 font-bold text-slate-500">MAD</div>
+                <input type="number" formControlName="deposit" placeholder="e.g. 1000" 
+                       class="w-full pl-14 pr-5 py-4 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white rounded-2xl focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 transition-all font-bold text-lg">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2.5">Min Rental Days</label>
+              <input type="number" formControlName="minRentalDays" placeholder="1" 
+                     class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white rounded-2xl focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 transition-all font-bold">
+            </div>
+          </div>
+        </div>
+
+        <!-- Image Upload Card -->
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-visible group">
+          <div class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-fuchsia-500 to-rose-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+          <div class="flex flex-wrap items-center gap-4 mb-8 border-b border-slate-100 dark:border-slate-700 pb-5">
+            <div class="p-3 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 rounded-2xl">
+              <span class="iconify text-2xl" data-icon="lucide:image-plus"></span>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-slate-800 dark:text-white">Media</h3>
+              <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">Upload photos of the item.</p>
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            <!-- Upload Box -->
+            <label class="flex flex-col items-center justify-center w-full h-40 border-2 border-slate-300 border-dashed rounded-2xl cursor-pointer bg-slate-50 dark:hover:bg-slate-800 dark:bg-slate-900/50 dark:border-slate-600 hover:bg-slate-100 hover:border-blue-500 transition-all group/upload text-center">
+              <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                 <span class="iconify text-4xl text-slate-400 group-hover/upload:text-blue-500 transition-colors mb-2" data-icon="lucide:upload-cloud"></span>
+                 <p class="text-sm font-bold text-slate-700 dark:text-slate-300">Click to upload <span class="font-normal text-slate-500">or drag and drop</span></p>
+                 <p class="text-xs text-slate-500 mt-1">SVG, PNG, JPG or GIF (MAX. 5MB)</p>
+              </div>
+              <input type="file" class="hidden" multiple accept="image/*" (change)="onFilesSelected($event)">
+            </label>
+
+            <!-- Previews Grid -->
+            <div class="grid grid-cols-2 gap-3" *ngIf="previewUrls.length > 0">
+              <div *ngFor="let url of previewUrls; let i = index" class="relative group/preview rounded-xl overflow-hidden shadow-sm aspect-square border border-slate-200">
+                <img [src]="url" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover/preview:opacity-100 transition-opacity flex items-center justify-center">
+                  <button type="button" (click)="removeImage(i)" class="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transform hover:scale-110 transition-all shadow-lg">
+                    <span class="iconify text-xl" data-icon="lucide:trash-2"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Actions Floor -->
+    <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative z-10 before:absolute before:inset-0 before:bg-gradient-to-r before:from-blue-50/50 before:to-indigo-50/50 dark:before:from-blue-900/10 dark:before:to-indigo-900/10 before:rounded-3xl before:-z-10">
+      <div class="flex items-center gap-3 text-sm font-bold text-slate-600 dark:text-slate-300">
+        <div class="p-2 bg-emerald-100/50 text-emerald-500 rounded-lg">
+          <span class="iconify text-lg" data-icon="lucide:shield-check"></span>
+        </div>
+        Make sure images are clear to attract more views.
+      </div>
+      
+      <div class="flex items-center gap-4 w-full sm:w-auto">
+        <button type="button" [routerLink]="['/owner/items']" class="w-full sm:w-auto px-8 py-4 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-2xl text-base font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 focus:outline-none transition-all duration-300 hover:shadow-md">
+          Cancel
+        </button>
+        <button type="submit" [disabled]="submitting" 
+                class="w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-700 hover:from-blue-700 text-white rounded-2xl text-base font-extrabold shadow-xl shadow-indigo-600/30 transition-all duration-300 transform active:scale-95 disabled:opacity-75 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2.5 group">
+          <svg *ngIf="submitting" class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+          <span *ngIf="!submitting" class="iconify text-xl group-hover:translate-x-1 transition-transform" data-icon="lucide:arrow-right"></span>
+          {{ isEditMode ? 'Update Item' : 'Publish Item' }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

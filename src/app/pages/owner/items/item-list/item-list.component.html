@@ -1,0 +1,196 @@
+<div class="space-y-8 pb-12">
+  
+  <!-- Header Card (Premium Layout) -->
+  <div class="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none p-8 sm:p-10 z-10 w-full mb-8">
+    <div class="absolute -top-24 -right-24 w-96 h-96 bg-gradient-to-br from-indigo-100/40 to-blue-100/40 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-full blur-3xl mix-blend-multiply opacity-70 pointer-events-none"></div>
+    <div class="absolute bottom-0 -left-10 w-72 h-72 bg-gradient-to-tr from-cyan-100/40 to-teal-100/40 dark:from-cyan-900/20 dark:to-teal-900/20 rounded-full blur-3xl mix-blend-multiply opacity-70 pointer-events-none"></div>
+    
+    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-xs font-bold tracking-wide uppercase mb-3">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+          </span>
+          Inventory Dashboard
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-2 tracking-tight">My Equipment</h1>
+        <p class="text-slate-500 dark:text-slate-400 text-base max-w-2xl font-medium">Manage your items, check their status, and edit their details.</p>
+      </div>
+
+      <a [routerLink]="['/owner/items/new']" class="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-2xl text-base font-extrabold shadow-xl shadow-blue-600/30 transition-all duration-300 transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2 group whitespace-nowrap">
+        <span class="iconify text-xl group-hover:rotate-90 transition-transform" data-icon="lucide:plus"></span>
+        Add New Item
+      </a>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="w-full flex justify-center py-20 flex-col items-center gap-4">
+    <div class="w-12 h-12 border-4 border-slate-200 border-t-blue-500 rounded-full animate-spin"></div>
+    <p class="text-slate-500 font-medium">Loading your inventory...</p>
+  </div>
+
+  <!-- Table Card -->
+  <div *ngIf="!loading && items.length > 0" class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200/80 dark:border-slate-700/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
+    <div class="overflow-x-auto custom-scrollbar">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700 text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold">
+            <th class="px-6 py-5 rounded-tl-3xl">Item Details</th>
+            <th class="px-6 py-5">Price / Day</th>
+            <th class="px-6 py-5">Status</th>
+            <th class="px-6 py-5">Condition</th>
+            <th class="px-6 py-5 rounded-tr-3xl text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 dark:divide-slate-700/50">
+          <tr *ngFor="let item of items" class="hover:bg-blue-50/50 dark:hover:bg-slate-800/80 transition-colors group">
+            
+            <!-- Item Details (Image + Name + Category) -->
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-4">
+                <div class="w-16 h-16 rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-100 flex-shrink-0">
+                  <img [src]="getMainImage(item)" class="w-full h-full object-cover">
+                </div>
+                <div>
+                  <div class="font-bold text-slate-900 dark:text-white text-base group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{{ item.title }}</div>
+                  <div class="text-sm text-slate-500 font-medium flex items-center gap-1.5 mt-0.5">
+                    <span class="w-2 h-2 rounded-full bg-slate-300"></span>
+                    {{ item.categoryName || 'Uncategorized' }} • {{ item.city }}
+                  </div>
+                </div>
+              </div>
+            </td>
+
+            <!-- Price -->
+            <td class="px-6 py-4">
+              <div class="text-slate-900 dark:text-white font-black text-lg">{{ item.pricePerDay }} MAD</div>
+              <div class="text-sm text-slate-500 font-medium">Dep: {{ item.deposit || 0 }} MAD</div>
+            </td>
+
+            <!-- Status -->
+            <td class="px-6 py-4">
+              <span *ngIf="item.available" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100/50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 text-xs font-bold tracking-wide">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Available
+              </span>
+              <span *ngIf="!item.available" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-100/50 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400 text-xs font-bold tracking-wide">
+                <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Rented out
+              </span>
+            </td>
+
+            <!-- Condition -->
+            <td class="px-6 py-4">
+              <div class="text-slate-700 dark:text-slate-300 font-medium bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-lg inline-block text-sm">
+                {{ item.itemCondition }}
+              </div>
+            </td>
+
+            <!-- Actions -->
+            <td class="px-6 py-4 text-right">
+              <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <!-- Edit -->
+                <a [routerLink]="['/owner/items', item.id]" class="p-2.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700 rounded-xl transition-all shadow-sm border border-transparent hover:border-blue-100 transform hover:-translate-y-0.5">
+                  <span class="iconify text-lg" data-icon="lucide:pencil"></span>
+                </a>
+                <!-- Delete -->
+                <button (click)="openDeleteModal(item.id)" [disabled]="deleteLoading === item.id" class="p-2.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-slate-700 rounded-xl transition-all shadow-sm border border-transparent hover:border-rose-100 transform hover:-translate-y-0.5 disabled:opacity-50">
+                  <span *ngIf="deleteLoading !== item.id" class="iconify text-lg" data-icon="lucide:trash-2"></span>
+                  <div *ngIf="deleteLoading === item.id" class="w-4 h-4 border-2 border-slate-200 border-t-rose-500 rounded-full animate-spin m-0.5"></div>
+                </button>
+              </div>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <!-- Empty State -->
+  <div *ngIf="!loading && items.length === 0" class="flex flex-col items-center justify-center p-16 sm:p-24 bg-white dark:bg-slate-800 rounded-3xl border border-dashed border-slate-300 dark:border-slate-600 text-center">
+    <div class="w-24 h-24 mb-6 rounded-full bg-blue-50 dark:bg-slate-700/50 flex items-center justify-center">
+      <span class="iconify text-5xl text-blue-500" data-icon="lucide:package-open"></span>
+    </div>
+    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">No items listed yet</h3>
+    <p class="text-slate-500 dark:text-slate-400 font-medium mb-8 max-w-sm mx-auto">Publish your first equipment and start earning money today. It takes less than two minutes!</p>
+    <a [routerLink]="['/owner/items/new']" class="px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-600/20 transition-all transform hover:-translate-y-1">
+      Add Your First Item
+    </a>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div *ngIf="showDeleteModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6" style="margin: 0;">
+    <!-- Backdrop with blur -->
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" (click)="closeDeleteModal()"></div>
+    
+    <!-- Modal Panel -->
+    <div class="relative w-full max-w-md bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-2xl border border-slate-200/50 dark:border-slate-700/50 overflow-hidden transform transition-all">
+      <!-- Top Decorative Gradient -->
+      <div class="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-rose-50 to-white dark:from-rose-900/20 dark:to-slate-800 pointer-events-none"></div>
+
+      <div class="relative p-8 sm:p-10 text-center">
+        <!-- Floating Icon -->
+        <div class="w-20 h-20 mx-auto mb-6 relative">
+          <div class="absolute inset-0 bg-rose-100 dark:bg-rose-500/20 rounded-full animate-ping opacity-75"></div>
+          <div class="relative flex items-center justify-center w-full h-full bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 rounded-full border-4 border-white dark:border-slate-800 shadow-xl">
+            <span class="iconify text-4xl" data-icon="lucide:trash-2"></span>
+          </div>
+        </div>
+        
+        <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mb-3 tracking-tight">Delete Item?</h3>
+        <p class="text-slate-500 dark:text-slate-400 text-base font-medium mb-10 leading-relaxed">
+          Are you sure you want to remove this equipment from your inventory? This action is <span class="text-rose-600 dark:text-rose-400 font-bold">permanent</span> and cannot be undone.
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4">
+          <button (click)="closeDeleteModal()" [disabled]="deleteLoading !== null" class="flex-1 px-6 py-4 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-2xl font-bold transition-all disabled:opacity-50">
+            Cancel
+          </button>
+          <button (click)="confirmDelete()" [disabled]="deleteLoading !== null" class="flex-1 px-6 py-4 bg-rose-600 hover:bg-rose-700 focus:ring-4 focus:ring-rose-500/20 text-white rounded-2xl font-bold transition-all shadow-xl shadow-rose-600/30 disabled:opacity-50 flex items-center justify-center gap-3">
+            <div *ngIf="deleteLoading !== null" class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            <span *ngIf="deleteLoading === null">Yes, Delete</span>
+            <span *ngIf="deleteLoading !== null">Deleting...</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications Container -->
+  <div class="fixed top-24 right-6 z-[200] flex flex-col gap-4 pointer-events-none">
+    <div *ngFor="let toast of toasts" 
+         class="pointer-events-auto transform transition-all duration-300 ease-out origin-top flex items-center gap-4 px-5 py-4 rounded-2xl shadow-2xl w-80 md:w-96 border relative overflow-hidden group toast-animate-enter"
+         [ngClass]="{
+           'bg-white dark:bg-slate-800 border-emerald-100 dark:border-emerald-900/50 shadow-emerald-500/10': toast.type === 'success',
+           'bg-white dark:bg-slate-800 border-rose-100 dark:border-rose-900/50 shadow-rose-500/10': toast.type === 'error'
+         }">
+      <!-- Accent Line -->
+      <div class="absolute left-0 top-0 bottom-0 w-1.5"
+           [ngClass]="{'bg-gradient-to-b from-emerald-400 to-emerald-600': toast.type === 'success', 'bg-gradient-to-b from-rose-400 to-rose-600': toast.type === 'error'}"></div>
+      
+      <!-- Icon -->
+      <div [ngClass]="{'bg-emerald-50 dark:bg-emerald-900/40 text-emerald-500': toast.type === 'success', 'bg-rose-50 dark:bg-rose-900/40 text-rose-500': toast.type === 'error'}" class="w-12 h-12 rounded-full flex items-center justify-center shrink-0 shadow-inner">
+        <span *ngIf="toast.type === 'success'" class="iconify text-2xl" data-icon="lucide:check-circle-2"></span>
+        <span *ngIf="toast.type === 'error'" class="iconify text-2xl" data-icon="lucide:alert-circle"></span>
+      </div>
+
+      <!-- Content -->
+      <div class="flex-1 pr-2">
+        <h4 class="font-bold text-[15px] mb-0.5 text-slate-900 dark:text-white">
+          {{ toast.type === 'success' ? 'Success!' : 'Deletion Failed' }}
+        </h4>
+        <p class="text-[13px] font-medium text-slate-500 dark:text-slate-400 leading-snug">
+          {{ toast.message }}
+        </p>
+      </div>
+
+      <!-- Close Action -->
+      <button (click)="removeToast(toast.id)" class="p-2 shrink-0 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700">
+        <span class="iconify text-lg" data-icon="lucide:x"></span>
+      </button>
+    </div>
+  </div>
+
+</div>
