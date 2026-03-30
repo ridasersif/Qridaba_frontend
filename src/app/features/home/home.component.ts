@@ -58,6 +58,7 @@ export class HomeComponent implements OnInit {
     
     this.itemService.getAllItems(this.currentPage, this.pageSize).subscribe({
       next: (res: any) => {
+        console.log(res);
         if (res.data && Array.isArray(res.data)) {
           // Fallback just in case backend didn't update yet
           this.recentItems = res.data.slice(0, 8);
@@ -87,6 +88,17 @@ export class HomeComponent implements OnInit {
       this.isLoadMoreLoading = true;
       this.currentPage++;
       this.fetchRecentItems();
+    }
+  }
+
+  onScroll(event: Event) {
+    const element = event.target as HTMLElement;
+    // Check if scrolled to the right end (within a small threshold)
+    // Adding Math.ceil for decimal pixel values in some browsers
+    if (Math.ceil(element.scrollLeft + element.clientWidth) >= element.scrollWidth - 100) {
+      if (!this.isLoadMoreLoading && this.currentPage < this.totalPages - 1 && !this.loadingItems) {
+        this.loadMoreItems();
+      }
     }
   }
 }

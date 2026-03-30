@@ -119,91 +119,120 @@
 
 <!-- Lower Section: Recently Active Items -->
 <section class="max-w-[1400px] mx-auto px-6 py-20 pb-32">
-  <div class="flex items-center justify-between mb-10">
+  <div class="flex items-center justify-between mb-8">
     <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Recently active items</h2>
+    <div class="text-sm font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200" *ngIf="totalElements > 0">
+       {{ totalElements }} items available
+    </div>
   </div>
 
-  <!-- Skeloton for items -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10" *ngIf="loadingItems">
-     <div class="bg-slate-100 rounded-2xl aspect-[4/3] animate-pulse" *ngFor="let i of [1,2,3,4]"></div>
-  </div>
+  <!-- Horizontal Scroll Container -->
+  <div class="relative w-full group/carousel">
+    
+    <!-- Left Navigation Button (Optional visual hint) -->
+    <div class="absolute left-0 top-1/2 -translate-y-1/2 z-20 -ml-4 opacity-0 group-hover/carousel:opacity-100 transition-opacity hidden sm:block pointer-events-none">
+       <button class="w-10 h-10 bg-white rounded-full shadow-lg border border-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-800 pointer-events-auto">
+          <span class="iconify" data-icon="lucide:chevron-left"></span>
+       </button>
+    </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10" *ngIf="!loadingItems">
-    <!-- Item Card loop -->
-    <div *ngFor="let item of recentItems; let i = index" class="group relative cursor-pointer flex flex-col">
-       
-      <!-- Image Container -->
-      <div class="relative w-full aspect-[4/3] overflow-hidden rounded-2xl bg-slate-100 shadow-sm mb-4">
-        <!-- VERY POPULAR floating badge (simulate dynamic randomness for design) -->
-        <div class="absolute top-4 left-4 z-10 px-2.5 py-1 bg-purple-800 text-white text-[10px] font-extrabold uppercase tracking-wide rounded-md shadow drop-shadow-sm" *ngIf="i % 2 === 0">
-          VERY POPULAR
-        </div>
-        
-        <!-- Bookmark icon -->
-        <button class="absolute top-4 right-4 z-10 p-2.5 bg-white/95 backdrop-blur-sm text-purple-700 rounded-full hover:bg-white shadow transition-transform duration-300 hover:scale-110 active:scale-95 border border-slate-100">
-           <span class="iconify font-bold text-lg" data-icon="lucide:bookmark"></span>
-        </button>
+    <!-- Scrollable wrapper -->
+    <!-- Removed custom-scrollbar and added styles to hide the scrollbar completely -->
+    <div class="flex overflow-x-auto gap-6 sm:pb-8 pb-4 pt-2 snap-x snap-mandatory scroll-smooth w-full" 
+         style="scrollbar-width: none; -ms-overflow-style: none;" 
+         (scroll)="onScroll($event)">
+      
+      <!-- Skeleton for initial loading -->
+      <ng-container *ngIf="loadingItems && currentPage === 0">
+         <div class="w-[280px] sm:w-[320px] flex-shrink-0 snap-start bg-slate-100 rounded-2xl aspect-[4/3] animate-pulse border border-slate-200" *ngFor="let i of [1,2,3,4,5]"></div>
+      </ng-container>
 
-        <img [src]="item.images && item.images.length > 0 ? item.images[0].imageUrl : 'https://placehold.co/600x400/e2e8f0/94a3b8?text=No+Photo'" 
-             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" [alt]="item.title">
-      </div>
-
-      <!-- Item Content -->
-      <div class="flex flex-col flex-grow px-1">
-        <h3 class="font-extrabold text-slate-900 text-base mb-1 truncate group-hover:text-purple-700 transition-colors">{{ item.title }}</h3>
-        
-        <!-- Rating and Reviews -->
-        <div class="flex items-center gap-1 mb-2.5">
-          <span class="iconify text-yellow-400 text-sm drop-shadow-sm" data-icon="lucide:star" style="fill: currentColor" *ngFor="let star of [1,2,3,4,5]"></span>
-          <span class="text-sm font-bold text-slate-800 ml-1">5.0</span>
-          <span class="text-xs font-semibold text-slate-500">(128)</span>
-        </div>
-
-        <!-- Location -->
-        <div class="flex items-center gap-1.5 text-sm font-medium text-slate-500 mb-4 truncate">
-           <span class="iconify text-slate-400" data-icon="lucide:map-pin"></span>
-           {{ item.city || 'London, UK' }}
-        </div>
-
-        <div class="mt-auto">
-          <!-- Footer: Price and Owner -->
-          <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-            <div class="font-black text-slate-900 text-lg">
-              ${{ item.pricePerDay }} <span class="text-[13px] font-semibold text-slate-500">/day</span>
+      <!-- Item Card loop -->
+      <ng-container *ngIf="!loadingItems || currentPage > 0">
+        <div *ngFor="let item of recentItems; let i = index" class="group relative cursor-pointer flex flex-col w-[280px] sm:w-[320px] flex-shrink-0 snap-start h-full">
+           
+          <!-- Image Container -->
+          <div class="relative w-full aspect-[4/3] overflow-hidden rounded-2xl bg-white shadow-sm border border-slate-100 mb-4 transition duration-300 group-hover:shadow-md">
+            <!-- VERY POPULAR floating badge -->
+            <div class="absolute top-4 left-4 z-10 px-2.5 py-1 bg-purple-800 text-white text-[10px] font-extrabold uppercase tracking-wide rounded-md shadow drop-shadow-sm" *ngIf="i % 3 === 0">
+              VERY POPULAR
             </div>
-            <!-- Avatar -->
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-bold text-slate-500 truncate max-w-[80px]">{{ item.ownerName || 'Owner' }}</span>
-              <div class="w-7 h-7 rounded-full bg-slate-200 overflow-hidden border border-slate-200 shadow-sm">
-                 <img [src]="'https://ui-avatars.com/api/?name=' + (item.ownerName || 'O') + '&background=random'" alt="Owner" class="w-full h-full object-cover">
+            
+            <!-- Bookmark icon -->
+            <button class="absolute top-4 right-4 z-10 p-2.5 bg-white/95 backdrop-blur-sm text-purple-700 rounded-full hover:bg-white shadow transition-transform duration-300 hover:scale-110 active:scale-95 border border-slate-100">
+               <span class="iconify font-bold text-lg" data-icon="lucide:bookmark"></span>
+            </button>
+
+            <!-- Status Badge if false -->
+            <div class="absolute bottom-4 left-4 z-10 px-2.5 py-1 bg-slate-900/80 backdrop-blur-sm text-white text-[10px] font-bold uppercase rounded" *ngIf="item.available === false">
+              Rented
+            </div>
+
+            <img [src]="item.images && item.images.length > 0 ? item.images[0].imageUrl : 'https://placehold.co/600x400/e2e8f0/94a3b8?text=No+Photo'" 
+                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" [alt]="item.title">
+          </div>
+
+          <!-- Item Content -->
+          <div class="flex flex-col flex-grow px-1">
+            <h3 class="font-extrabold text-slate-900 text-base mb-1 truncate group-hover:text-purple-700 transition-colors">{{ item.title }}</h3>
+            
+            <!-- Rating and Reviews -->
+            <div class="flex items-center gap-1 mb-2.5">
+              <span class="iconify text-yellow-400 text-sm drop-shadow-sm" data-icon="lucide:star" style="fill: currentColor" *ngFor="let star of [1,2,3,4,5]"></span>
+              <span class="text-sm font-bold text-slate-800 ml-1">5.0</span>
+              <span class="text-xs font-semibold text-slate-500">(128)</span>
+            </div>
+
+            <!-- Location -->
+            <div class="flex items-center gap-1.5 text-sm font-medium text-slate-500 mb-4 truncate">
+               <span class="iconify text-slate-400" data-icon="lucide:map-pin"></span>
+               {{ item.city || 'London, UK' }}
+            </div>
+
+            <div class="mt-auto">
+              <!-- Footer: Price and Owner -->
+              <div class="flex items-center justify-between pt-3 border-t border-slate-100 bg-white">
+                <div class="font-black text-slate-900 text-lg">
+                  ${{ item.pricePerDay }} <span class="text-[13px] font-semibold text-slate-500">/day</span>
+                </div>
+                <!-- Avatar -->
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-slate-500 truncate max-w-[80px]">{{ item.ownerName || 'Owner' }}</span>
+                  <div class="w-7 h-7 rounded-full bg-slate-200 overflow-hidden border border-slate-200 shadow-sm">
+                     <img [src]="'https://ui-avatars.com/api/?name=' + (item.ownerName || 'O') + '&background=random'" alt="Owner" class="w-full h-full object-cover">
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </ng-container>
+
+      <!-- Infinite Scroll Skeleton appended when loading next page -->
+      <ng-container *ngIf="isLoadMoreLoading">
+         <div class="w-[280px] sm:w-[320px] pt-12 flex-shrink-0 snap-start flex flex-col justify-center items-center h-full min-h-[300px] border border-transparent">
+            <span class="iconify animate-spin text-purple-400 text-3xl mb-3" data-icon="lucide:loader-2"></span>
+            <p class="text-slate-500 font-semibold text-sm">Loading more...</p>
+         </div>
+      </ng-container>
+
+      <!-- End of List Indicator -->
+      <ng-container *ngIf="totalPages > 0 && currentPage === totalPages - 1 && !isLoadMoreLoading">
+         <div class="w-[200px] pt-12 flex-shrink-0 snap-center flex flex-col justify-center items-center h-[240px]">
+            <div class="w-10 h-1 bg-slate-200 rounded-full mb-3"></div>
+            <p class="text-slate-400 font-bold text-sm text-center">End of list<br><span class="text-xs text-slate-400 font-medium">({{totalElements}} items)</span></p>
+         </div>
+      </ng-container>
+
     </div>
+    
   </div>
-
-  <!-- Load More Section -->
-  <div class="mt-16 flex flex-col items-center justify-center w-full" *ngIf="totalPages > 1 && currentPage < totalPages - 1">
-     <div class="text-slate-400 font-semibold text-sm mb-4">
-        Showing {{ recentItems.length }} of {{ totalElements }} items
-     </div>
-     <button (click)="loadMoreItems()" [disabled]="isLoadMoreLoading" 
-             class="px-8 py-3.5 bg-white border-2 border-slate-200 text-slate-700 hover:border-purple-300 hover:text-purple-700 font-bold rounded-full transition-all shadow-sm flex items-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed">
-        <span class="iconify group-hover:-translate-y-1 transition-transform" data-icon="lucide:arrow-down" *ngIf="!isLoadMoreLoading"></span>
-        <span class="iconify animate-spin" data-icon="lucide:loader-2" *ngIf="isLoadMoreLoading"></span>
-        {{ isLoadMoreLoading ? 'Loading...' : 'Load more items' }}
-     </button>
-  </div>
-  
-  <div class="mt-16 flex flex-col items-center justify-center w-full" *ngIf="totalPages > 0 && currentPage === totalPages - 1">
-     <div class="w-16 h-1 bg-slate-200 rounded-full mb-4"></div>
-     <div class="text-slate-400 font-semibold text-sm">
-        You've reached the end of the list. ({{ totalElements }} items)
-     </div>
-  </div>
-
+  <style>
+    /* Ensure webkit scrollbar is hidden completely since inline styles only cover Firefox/IE */
+    .flex.overflow-x-auto::-webkit-scrollbar {
+        display: none;
+    }
+  </style>
 </section>
 
 <!-- Simple Footer -->
