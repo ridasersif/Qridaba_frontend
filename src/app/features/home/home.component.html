@@ -24,12 +24,13 @@
         <a href="#" class="hover:text-emerald-300 transition">Contact</a>
         
         <div class="flex items-center gap-3 ml-2">
-          <button class="px-5 py-2.5 bg-emerald-400 hover:bg-emerald-500 text-slate-900 font-bold rounded-full transition transform hover:scale-102 active:scale-95 shadow-lg border border-emerald-300/50">
-            Create listing
-          </button>
           
-          <button routerLink="/auth/login" class="px-5 py-2.5 bg-transparent border-2 border-white/80 hover:bg-white/10 rounded-full transition backdrop-blur-sm shadow-sm">
+          <button routerLink="/auth/login" class="px-5 py-2.5 bg-transparent border-2 border-white/80 hover:bg-white/10 rounded-full transition backdrop-blur-sm shadow-sm" *ngIf="!authService.currentUser()">
             Log in or register
+          </button>
+
+          <button (click)="logout()" class="px-5 py-2.5 bg-transparent border-2 border-red-400/80 text-red-100 hover:bg-red-500/20 hover:border-red-400 hover:text-white rounded-full transition backdrop-blur-sm shadow-sm" *ngIf="authService.currentUser()">
+            Logout
           </button>
           
           <button class="p-2.5 bg-white text-slate-900 rounded-full hover:bg-slate-100 transition shadow-lg shrink-0">

@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { CategoryService } from '../../core/services/category.service';
 import { ItemService } from '../../core/services/item.service';
+import { AuthService } from '../../core/services/auth.service';
 import { Category } from '../../core/models/category.model';
 import { Item } from '../../core/models/item.model';
 
@@ -14,6 +15,9 @@ import { Item } from '../../core/models/item.model';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
+  authService = inject(AuthService);
+  router = inject(Router);
+
   categories: Category[] = [];
   recentItems: Item[] = [];
 
@@ -100,5 +104,10 @@ export class HomeComponent implements OnInit {
         this.loadMoreItems();
       }
     }
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/auth/login']);
   }
 }
