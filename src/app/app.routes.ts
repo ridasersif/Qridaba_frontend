@@ -7,13 +7,7 @@ import { roleGuard } from './core/guards/role.guard';
 export const routes: Routes = [
     {
         path: '',
-        component: AppLayoutComponent,
-        children: [
-            {
-                path: '',
-                component: HomeComponent
-            }
-        ]
+        component: HomeComponent
     },
     {
         path: 'auth',

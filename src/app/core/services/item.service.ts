@@ -5,19 +5,17 @@ import { environment } from '../../../environments/environment';
 import { Item } from '../models/item.model';
 import { ApiResponse } from '../models/api-response.model';
 
+import { PaginatedResponse } from '../models/paginated-response.model';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ItemService {
   private http = inject(HttpClient);
-  // Using the exact path setup based on backend configuration.
-  // WebConfig.java sets the global prefix /api/v1.
-  // ItemController.java sets the RequestMapping to /items.
-  // Therefore the exact endpoint is /api/v1/items.
   private apiUrl = `${environment.apiUrl}/items`;
 
-  getAllItems(): Observable<ApiResponse<Item[]>> {
-    return this.http.get<ApiResponse<Item[]>>(this.apiUrl);
+  getAllItems(pageNo: number = 0, pageSize: number = 8): Observable<ApiResponse<PaginatedResponse<Item>>> {
+    return this.http.get<ApiResponse<PaginatedResponse<Item>>>(`${this.apiUrl}?pageNo=${pageNo}&pageSize=${pageSize}`);
   }
 
   getMyItems(): Observable<ApiResponse<Item[]>> {
