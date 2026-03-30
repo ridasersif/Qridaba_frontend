@@ -14,6 +14,10 @@ export const routes: Routes = [
         loadChildren: () => import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES)
     },
     {
+        path: 'items/:id',
+        loadComponent: () => import('./pages/item-details/item-details.component').then(m => m.ItemDetailsComponent)
+    },
+    {
         path: 'admin',
         component: DashboardLayoutComponent,
         canActivate: [roleGuard],

@@ -1,0 +1,238 @@
+<app-navbar></app-navbar>
+
+<div class="bg-gray-50 min-h-screen pb-20 pt-8" *ngIf="item">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col lg:flex-row gap-10">
+
+      <!-- Left Column: Image and Details -->
+      <div class="flex-1 lg:max-w-[800px]">
+        <!-- Main Image -->
+        <div
+          class="rounded-3xl overflow-hidden shadow-sm bg-black aspect-video sm:aspect-[4/3] lg:aspect-auto lg:h-[500px] mb-6 relative">
+          <img [src]="getMainImage()" [alt]="item.title" class="w-full h-full object-contain" />
+
+          <div *ngIf="!item.available"
+            class="absolute top-4 right-4 bg-red-600 text-white px-4 py-1 rounded-full font-medium shadow">
+            Currently Unavailable
+          </div>
+        </div>
+
+        <!-- Breadcrumbs -->
+        <nav class="text-sm text-gray-500 mb-8 flex items-center space-x-2">
+          <a routerLink="/" class="hover:text-gray-900 transition-colors">All categories</a>
+          <span>></span>
+          <span class="hover:text-gray-900 transition-colors cursor-pointer">{{ item.categoryName }}</span>
+          <span>></span>
+          <span class="text-gray-900 font-medium truncate">{{ item.title }}</span>
+        </nav>
+
+        <!-- Owner Card -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex items-center gap-4 mb-8">
+          <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden shadow-inner shrink-0">
+            <!-- Placeholder Avatar -->
+            <img src="assets/avatar-placeholder.png" alt="Owner" class="w-full h-full object-cover"
+              onerror="this.src='https://ui-avatars.com/api/?name=' + item.ownerName + '&background=f3f4f6&color=374151'" />
+          </div>
+          <div>
+            <h3 class="text-xl text-gray-900 flex items-center gap-2">
+              Owned by <span class="font-bold text-[#8a4f96]">{{ item.ownerName }}</span>
+            </h3>
+            <p class="text-gray-500 text-sm mt-1 flex items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              {{ item.city }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">Description</h2>
+          <div class="prose prose-lg text-gray-600 max-w-none">
+            <p class="whitespace-pre-line">{{ item.description }}</p>
+          </div>
+
+          <div class="mt-8 grid grid-cols-2 gap-4">
+            <div class="bg-white p-4 items-center rounded-xl border border-gray-100">
+              <span class="block text-sm text-gray-500 mb-1">Brand</span>
+              <span class="font-semibold text-gray-900">{{ item.brand }}</span>
+            </div>
+            <div class="bg-white p-4 items-center rounded-xl border border-gray-100">
+              <span class="block text-sm text-gray-500 mb-1">Model</span>
+              <span class="font-semibold text-gray-900">{{ item.model }}</span>
+            </div>
+            <div class="bg-white p-4 items-center rounded-xl border border-gray-100">
+              <span class="block text-sm text-gray-500 mb-1">Condition</span>
+              <span class="font-semibold text-gray-900">{{ item.itemCondition }}</span>
+            </div>
+            <div class="bg-white p-4 items-center rounded-xl border border-gray-100">
+              <span class="block text-sm text-gray-500 mb-1">Min Rental</span>
+              <span class="font-semibold text-gray-900">{{ item.minRentalDays }} Days</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Title & Booking Card -->
+      <div class="lg:w-[420px] shrink-0">
+        <!-- Title & Price Details -->
+        <h1 class="text-4xl font-bold text-gray-900 tracking-tight leading-tight mb-6">
+          {{ item.title }}
+        </h1>
+
+        <!-- Booking Sticky Card -->
+        <div class="sticky top-8 bg-white rounded-[2rem] shadow-xl border border-gray-100 p-8 pb-10">
+
+          <!-- Calendar Header -->
+          <div class="flex items-center justify-between mb-6">
+            <div class="font-semibold text-gray-900 text-lg ml-2">{{ currentMonthYearString }}</div>
+            <div class="flex gap-2">
+              <button (click)="previousMonth()"
+                class="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600 hover:text-gray-900">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button (click)="nextMonth()"
+                class="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600 hover:text-gray-900">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Calendar Grid -->
+          <div class="grid grid-cols-7 mb-2">
+            <div *ngFor="let day of weekDays" class="text-center text-xs font-medium text-gray-400 py-2">
+              {{ day }}
+            </div>
+          </div>
+          <div class="grid grid-cols-7 gap-y-1 gap-x-0 outline-none">
+            <ng-container *ngFor="let day of calendarDays">
+              <!-- Wrapping day to allow edge-to-edge range bg styling seamlessly -->
+              <div class="relative flex justify-center py-1 select-none" [ngClass]="{
+                     'bg-[#e8f5e9]/50': day.isInRange && !day.isDisabled,
+                     'rounded-l-full': day.isSelectedStart && endDate,
+                     'rounded-r-full': day.isSelectedEnd && startDate,
+                     'opacity-0': !day.isCurrentMonth
+                   }">
+                <button *ngIf="day.isCurrentMonth" (click)="selectDate(day)" [disabled]="day.isDisabled"
+                  class="w-10 h-10 rounded-full flex items-center justify-center text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#5d9061] focus:ring-offset-1"
+                  [ngClass]="{
+                          'bg-[#5d9061] text-white font-semibold shadow-md': (day.isSelectedStart || day.isSelectedEnd) && !day.isDisabled,
+                          'text-gray-900 hover:bg-gray-100': !day.isSelectedStart && !day.isSelectedEnd && !day.isDisabled && !day.isInRange,
+                          'text-[#5d9061] font-medium': day.isInRange && !day.isSelectedStart && !day.isSelectedEnd,
+                          'text-gray-300 cursor-not-allowed': day.isDisabled && !isDateUnavailable(day.date),
+                          'text-red-300 line-through cursor-not-allowed': isDateUnavailable(day.date)
+                        }">
+                  {{ day.date.getDate() }}
+                </button>
+              </div>
+            </ng-container>
+          </div>
+
+          <!-- Selected Dates Pills -->
+          <div class="flex gap-4 mt-8 mb-4">
+            <div class="flex-1 rounded-full border border-gray-200 py-3 px-4 flex flex-col items-center bg-gray-50/50">
+              <span class="text-xs text-gray-500 font-medium mb-1 uppercase tracking-wider">Pickup</span>
+              <span class="text-sm font-semibold text-gray-900">
+                {{ startDate ? (startDate | date:'EEE, MMM d') : 'Select date' }}
+              </span>
+            </div>
+            <div class="flex-1 rounded-full border border-gray-200 py-3 px-4 flex flex-col items-center bg-gray-50/50">
+              <span class="text-xs text-gray-500 font-medium mb-1 uppercase tracking-wider">Drop off</span>
+              <span class="text-sm font-semibold text-gray-900">
+                {{ endDate ? (endDate | date:'EEE, MMM d') : 'Select date' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Clear Dates Link -->
+          <div class="text-center mb-8">
+            <button *ngIf="startDate || endDate" (click)="clearDates()"
+              class="text-sm font-medium text-[#8a4f96] hover:text-[#764181] transition-colors">
+              Clear dates
+            </button>
+          </div>
+
+          <!-- Divider -->
+          <div class="h-px w-full bg-gray-100 mb-8"></div>
+
+          <!-- Price Calculation -->
+          <div class="text-center mb-8 h-[76px] flex flex-col justify-center">
+            <ng-container *ngIf="totalDays > 0">
+              <div class="text-4xl font-bold text-gray-900 mb-2">£{{ totalPrice }}</div>
+              <div class="text-sm text-gray-500">
+                For {{ totalDays }} {{ totalDays === 1 ? 'day' : 'days' }} (incl. £{{ bookingFee }} booking fee)
+              </div>
+            </ng-container>
+            <ng-container *ngIf="totalDays === 0">
+              <div class="text-xl font-bold text-gray-400 mt-2">£{{ item.pricePerDay }}/day</div>
+              <div class="text-sm text-gray-400 mt-1">Select dates to view total</div>
+            </ng-container>
+          </div>
+
+          <!-- Send Request Button -->
+          <button (click)="sendRequest()" [disabled]="!startDate || !endDate || !item.available || bookingLoading"
+            class="w-full py-4 px-6 rounded-2xl text-white font-semibold text-lg transition-all shadow-md focus:outline-none focus:ring-4 focus:ring-[#8a4f96]/30 mb-6 flex items-center justify-center gap-2"
+            [ngClass]="{
+                    'bg-[#8a4f96] hover:bg-[#764181]': startDate && endDate && item.available && !bookingLoading,
+                    'bg-gray-300 cursor-not-allowed': !startDate || !endDate || !item.available,
+                    'bg-[#8a4f96]/70': bookingLoading
+                  }">
+            <span *ngIf="!bookingLoading && !bookingSuccess">Send a request</span>
+            <span *ngIf="bookingLoading" class="animate-pulse">Processing...</span>
+            <span *ngIf="bookingSuccess" class="flex gap-2 items-center"><svg xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg> Request Sent!</span>
+          </button>
+
+          <!-- Disclaimer -->
+          <div class="flex items-start gap-3 px-2">
+            <div class="text-blue-500 mt-0.5 shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"
+                  clip-rule="evenodd" />
+              </svg>
+            </div>
+            <p class="text-xs text-blue-600 leading-tight">
+              No strings attached when you send a request and you can ask questions to {{ item.ownerName.split(' ')[0]
+              }}
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="min-h-screen flex items-center justify-center bg-gray-50" *ngIf="loading">
+  <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8a4f96]"></div>
+</div>
+
+<div class="min-h-screen flex items-center justify-center bg-gray-50" *ngIf="error">
+  <div class="text-center max-w-md bg-white p-8 rounded-2xl shadow-sm border border-red-100">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-red-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24"
+      stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+    </svg>
+    <h2 class="text-xl font-bold text-gray-900 mb-2">Oops!</h2>
+    <p class="text-gray-500">{{ error }}</p>
+    <button routerLink="/" class="mt-6 text-[#8a4f96] font-medium hover:underline">Return to Home</button>
+  </div>
+</div>
+
+<app-footer></app-footer>
