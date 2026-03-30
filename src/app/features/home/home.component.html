@@ -9,36 +9,8 @@
     <div class="absolute inset-0 bg-gradient-to-r from-slate-900/60 via-slate-900/40 to-transparent"></div>
     <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-slate-900/40 to-transparent"></div>
     
-    <!-- Top Transparent Navigation Navbar inside hero -->
-    <header class="relative z-20 w-full px-6 md:px-10 py-5 flex items-center justify-between">
-      <!-- Logo -->
-      <div class="text-white text-3xl font-extrabold tracking-tight cursor-pointer" routerLink="/">
-        qrid<span class="text-emerald-400">aba</span>
-      </div>
-      
-      <!-- Nav Links & Actions (Hidden on Mobile) -->
-      <div class="hidden lg:flex items-center gap-6 text-white text-sm font-medium shadow-sm drop-shadow-md">
-        <a href="#" class="hover:text-emerald-300 transition">How Qridaba works</a>
-        <a href="#" class="hover:text-emerald-300 transition">Guarantee</a>
-        <a href="#" class="hover:text-emerald-300 transition">FAQ's</a>
-        <a href="#" class="hover:text-emerald-300 transition">Contact</a>
-        
-        <div class="flex items-center gap-3 ml-2">
-          
-          <button routerLink="/auth/login" class="px-5 py-2.5 bg-transparent border-2 border-white/80 hover:bg-white/10 rounded-full transition backdrop-blur-sm shadow-sm" *ngIf="!authService.currentUser()">
-            Log in or register
-          </button>
-
-          <button (click)="logout()" class="px-5 py-2.5 bg-transparent border-2 border-red-400/80 text-red-100 hover:bg-red-500/20 hover:border-red-400 hover:text-white rounded-full transition backdrop-blur-sm shadow-sm" *ngIf="authService.currentUser()">
-            Logout
-          </button>
-          
-          <button class="p-2.5 bg-white text-slate-900 rounded-full hover:bg-slate-100 transition shadow-lg shrink-0">
-             <span class="iconify text-lg" data-icon="lucide:more-horizontal"></span>
-          </button>
-        </div>
-      </div>
-    </header>
+    <!-- Shared Navbar component -->
+    <app-navbar></app-navbar>
 
     <!-- Center Content: Title & Search -->
     <div class="relative z-20 flex-1 flex flex-col justify-center px-8 lg:px-16 xl:px-24 pb-12">
@@ -236,18 +208,5 @@
   </style>
 </section>
 
-<!-- Simple Footer -->
-<footer class="bg-slate-50 py-10 px-8 border-t border-slate-200">
-    <div class="max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-        <div class="flex items-center gap-4">
-             <div class="text-slate-800 text-2xl font-extrabold tracking-tight blur-[1px]">
-                qrid<span class="text-emerald-500">aba</span>
-             </div>
-             <p class="text-sm font-medium text-slate-500">© 2026 Qridaba Platform. Demo Version.</p>
-        </div>
-        <div class="flex gap-6 text-sm font-bold text-slate-500">
-            <span class="hover:text-slate-900 cursor-pointer transition">Terms</span>
-            <span class="hover:text-slate-900 cursor-pointer transition">Privacy</span>
-        </div>
-    </div>
-</footer>
+<!-- Shared Footer component -->
+<app-footer></app-footer>
