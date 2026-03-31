@@ -56,6 +56,16 @@ export class ItemDetailsComponent implements OnInit {
   bookingFee = 0;
   totalPrice = 0;
 
+  showLoginModal = false;
+
+  closeLoginModal() {
+    this.showLoginModal = false;
+  }
+
+  goToLogin() {
+    this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
+  }
+
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
@@ -278,7 +288,7 @@ export class ItemDetailsComponent implements OnInit {
 
     const token = this.storageService.getAccessToken();
     if (!token) {
-        this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
+        this.showLoginModal = true;
         return;
     }
 

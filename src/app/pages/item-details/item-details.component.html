@@ -249,3 +249,26 @@
 </div>
 
 <app-footer></app-footer>
+
+<!-- Login Required Modal -->
+<div *ngIf="showLoginModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" (click)="closeLoginModal()"></div>
+  <div class="relative w-full max-w-md bg-white rounded-3xl p-8 shadow-2xl transform transition-all animate-in zoom-in-95 duration-200">
+    <button (click)="closeLoginModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors">
+      <span class="iconify text-xl" data-icon="lucide:x"></span>
+    </button>
+    <div class="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mb-6 mx-auto shadow-inner">
+      <span class="iconify text-3xl" data-icon="lucide:lock"></span>
+    </div>
+    <h3 class="text-2xl font-extrabold text-slate-900 text-center mb-3">Login Required</h3>
+    <p class="text-slate-500 text-center mb-8 font-medium">To securely book this item and communicate with the owner, please log in to your account.</p>
+    <div class="flex flex-col gap-3">
+      <button (click)="goToLogin()" class="w-full py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold rounded-xl transition-all duration-300 shadow-md transform hover:-translate-y-0.5 active:translate-y-0">
+        Go to Login
+      </button>
+      <button (click)="closeLoginModal()" class="w-full py-3.5 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold rounded-xl transition-colors border border-slate-200/60">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
