@@ -42,7 +42,7 @@ export class ItemFormComponent implements OnInit {
       itemCondition: ['', Validators.required],
       pricePerDay: ['', [Validators.required, Validators.min(0)]],
       deposit: ['', [Validators.min(0)]],
-      minRentalDays: [1, [Validators.required, Validators.min(1)]],
+
       city: ['', Validators.required],
       categoryId: ['', Validators.required],
       latitude: [0],
@@ -88,7 +88,7 @@ export class ItemFormComponent implements OnInit {
             itemCondition: item.itemCondition,
             pricePerDay: item.pricePerDay,
             deposit: item.deposit,
-            minRentalDays: item.minRentalDays,
+
             city: item.city,
             categoryId: item.categoryId,
             latitude: item.latitude || 0,
@@ -153,14 +153,17 @@ export class ItemFormComponent implements OnInit {
     }
   }
 
+
   private handleSuccess() {
     this.submitting = false;
     this.router.navigate(['/owner/items']);
   }
+ 
 
   private handleError(err: any) {
     console.error('Submission failed!', err);
     this.submitting = false;
-    alert('Failed to save item. Check connection or form data.');
+    let errMsg = err.error?.message || err.message || 'Unknown error';
+    alert(`Failed to save item. Status: ${err.status}\nMessage: ${errMsg}`);
   }
 }

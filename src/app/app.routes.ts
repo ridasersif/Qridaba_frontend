@@ -93,6 +93,10 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/owner/items/item-form/item-form.component').then(m => m.ItemFormComponent)
             },
             {
+                path: 'bookings',
+                loadComponent: () => import('./pages/owner/bookings/bookings-list/bookings-list.component').then(m => m.BookingsListComponent)
+            },
+            {
                 path: '',
                 redirectTo: 'dashboard',
                 pathMatch: 'full'

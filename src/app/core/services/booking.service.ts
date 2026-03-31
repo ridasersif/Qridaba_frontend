@@ -24,4 +24,8 @@ export class BookingService {
       params: { status }
     });
   }
+
+  getOwnerBookings(): Observable<BookingResponse[]> {
+    return this.http.get<BookingResponse[]>(`${this.apiUrl}/owner`);
+  }
 }

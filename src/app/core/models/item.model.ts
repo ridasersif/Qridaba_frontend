@@ -13,7 +13,7 @@ export interface Item {
   itemCondition: string;
   pricePerDay: number;
   deposit: number;
-  minRentalDays: number;
+
   city: string;
   latitude: number;
   longitude: number;

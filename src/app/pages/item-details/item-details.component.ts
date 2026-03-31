@@ -5,6 +5,7 @@ import { ItemService } from '../../core/services/item.service';
 import { BookingService } from '../../core/services/booking.service';
 import { Item } from '../../core/models/item.model';
 import { BookingRequest } from '../../core/models/booking.model';
+import { StorageService } from '../../core/services/storage.service';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 
@@ -29,12 +30,16 @@ export class ItemDetailsComponent implements OnInit {
   private router = inject(Router);
   private itemService = inject(ItemService);
   private bookingService = inject(BookingService);
+  private storageService = inject(StorageService);
 
   item: Item | null = null;
   loading = true;
   bookingLoading = false;
   error: string | null = null;
   bookingSuccess: boolean = false;
+  
+  toastMessage: string | null = null;
+  toastType: 'success' | 'error' = 'success';
 
   // Calendar State
   currentDate = new Date();
@@ -271,7 +276,7 @@ export class ItemDetailsComponent implements OnInit {
   sendRequest() {
     if (!this.startDate || !this.endDate || !this.item) return;
 
-    const token = localStorage.getItem('token');
+    const token = this.storageService.getAccessToken();
     if (!token) {
         this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
         return;
@@ -298,6 +303,7 @@ export class ItemDetailsComponent implements OnInit {
         next: (res) => {
             this.bookingLoading = false;
             this.bookingSuccess = true;
+            this.showToast('success', 'Booking request sent successfully!');
             // Clear dates on success
             setTimeout(() => {
                this.bookingSuccess = false;
@@ -308,9 +314,29 @@ export class ItemDetailsComponent implements OnInit {
         error: (err) => {
             this.bookingLoading = false;
             console.error('Booking failed', err);
-            // In a real app add toast error
+            let errMsg = 'Booking failed. Keep in mind you cannot rent your own items.';
+            
+            if (err.error) {
+                if (err.error.errors && Object.keys(err.error.errors).length > 0) {
+                    // Extract field validation errors
+                    const errorMessages = Object.values(err.error.errors).join(', ');
+                    errMsg = errorMessages;
+                } else if (err.error.message) {
+                    errMsg = err.error.message;
+                }
+            }
+            
+            this.showToast('error', errMsg);
         }
     });
+  }
+
+  showToast(type: 'success' | 'error', message: string) {
+    this.toastType = type;
+    this.toastMessage = message;
+    setTimeout(() => {
+        this.toastMessage = null;
+    }, 4500);
   }
 
   getMainImage(): string {

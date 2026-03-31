@@ -17,7 +17,7 @@ export interface BookingResponse {
 }
 
 export enum BookingStatus {
-  DRAFT = 'DRAFT',
+  PENDING = 'PENDING',
   ACCEPTED = 'ACCEPTED',
   REJECTED = 'REJECTED',
   CANCELLED = 'CANCELLED',
