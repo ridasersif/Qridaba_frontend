@@ -26,6 +26,10 @@ export class ItemService {
     return this.http.get<ApiResponse<Item>>(`${this.apiUrl}/${id}`);
   }
 
+  getItemsByCategory(categoryId: string): Observable<ApiResponse<Item[]>> {
+    return this.http.get<ApiResponse<Item[]>>(`${this.apiUrl}/category/${categoryId}`);
+  }
+
   createItem(itemJson: string, images: File[]): Observable<ApiResponse<Item>> {
     const formData = new FormData();
     formData.append('item', itemJson);

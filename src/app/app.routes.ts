@@ -18,6 +18,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/item-details/item-details.component').then(m => m.ItemDetailsComponent)
     },
     {
+        path: 'category/:id',
+        loadComponent: () => import('./pages/category-items/category-items.component').then(m => m.CategoryItemsComponent)
+    },
+    {
         path: 'admin',
         component: DashboardLayoutComponent,
         canActivate: [roleGuard],

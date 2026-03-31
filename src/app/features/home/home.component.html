@@ -83,7 +83,7 @@
 
       <!-- Category Pills (The 12 items) -->
       <div class="flex flex-wrap gap-x-3 gap-y-3 mb-10" *ngIf="!loadingCategories">
-        <button *ngFor="let category of categories"
+        <button *ngFor="let category of categories" [routerLink]="['/category', category.id]"
           class="px-5 py-2.5 border border-purple-300 text-purple-700 hover:bg-purple-50 hover:border-purple-500 rounded-full text-[13px] font-semibold transition-all shadow-sm hover:shadow active:scale-95 text-left tracking-wide whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
           {{ category.name }}
         </button>
