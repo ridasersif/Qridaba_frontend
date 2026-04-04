@@ -148,10 +148,14 @@
               VERY POPULAR
             </div>
 
-            <!-- Bookmark icon -->
+            <!-- Favorite icon -->
             <button
-              class="absolute top-4 right-4 z-10 p-2.5 bg-white/95 backdrop-blur-sm text-purple-700 rounded-full hover:bg-white shadow transition-transform duration-300 hover:scale-110 active:scale-95 border border-slate-100">
-              <span class="iconify font-bold text-lg" data-icon="lucide:bookmark"></span>
+              (click)="toggleFavorite($event, item)"
+              class="absolute top-4 right-4 z-10 p-2.5 backdrop-blur-sm rounded-full shadow transition-all duration-300 hover:scale-110 active:scale-95 border"
+              [ngClass]="(favoriteItemIds().includes(item.id)) ? 'bg-rose-500 text-white border-rose-500' : 'bg-white/95 text-slate-400 hover:text-rose-500 border-slate-100 hover:bg-white'">
+              <span class="iconify font-bold text-lg transition-colors" 
+                    data-icon="lucide:heart"
+                    [style.fill]="(favoriteItemIds().includes(item.id)) ? 'currentColor' : 'none'"></span>
             </button>
 
             <!-- Status Badge if false -->
@@ -236,6 +240,36 @@
     }
   </style>
 </section>
+
+<!-- Authentication Required Modal -->
+<div *ngIf="showAuthModal"
+  class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300">
+  <div
+    class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full mx-4 transform scale-100 opacity-100 transition-all duration-300 flex flex-col items-center">
+    <!-- Icon Circle -->
+    <div class="w-16 h-16 bg-rose-50 rounded-full flex items-center justify-center mb-6">
+      <span class="iconify text-rose-500 text-3xl" data-icon="lucide:heart"></span>
+    </div>
+
+    <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Login Required</h3>
+    <p class="text-slate-500 text-center mb-8">
+      You need to be logged in to save favorite items. Please log in or create an account to continue.
+    </p>
+
+    <!-- Actions -->
+    <div class="flex flex-col w-full gap-3">
+      <button [routerLink]="['/login']"
+        class="w-full py-3.5 bg-purple-700 hover:bg-purple-800 text-white font-bold rounded-xl shadow-md transition-colors text-lg flex justify-center items-center gap-2">
+        <span>Log in</span>
+        <span class="iconify text-xl" data-icon="lucide:arrow-right"></span>
+      </button>
+      <button (click)="closeAuthModal()"
+        class="w-full py-3.5 bg-white hover:bg-slate-50 text-slate-600 font-bold border border-slate-200 rounded-xl transition-colors">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- Shared Footer component -->
 <app-footer></app-footer>

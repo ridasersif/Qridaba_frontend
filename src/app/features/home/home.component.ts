@@ -7,6 +7,10 @@ import { Category } from '../../core/models/category.model';
 import { Item } from '../../core/models/item.model';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { Store } from '@ngrx/store';
+import { AuthService } from '../../core/services/auth.service';
+import * as FavoriteActions from '../../core/store/favorites/favorite.actions';
+import { selectFavoriteItemIds } from '../../core/store/favorites/favorite.selectors';
 
 @Component({
   selector: 'app-home',
@@ -29,6 +33,12 @@ export class HomeComponent implements OnInit {
   totalPages = 0;
   totalElements = 0;
 
+  // Favorites & Auth State
+  authService = inject(AuthService);
+  private store = inject(Store);
+  favoriteItemIds = this.store.selectSignal(selectFavoriteItemIds);
+  showAuthModal = false;
+
   constructor(
     private categoryService: CategoryService,
     private itemService: ItemService
@@ -37,6 +47,30 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.fetchCategories();
     this.fetchRecentItems();
+    if (this.authService.currentUser()) {
+      this.store.dispatch(FavoriteActions.loadFavorites());
+    }
+  }
+
+  toggleFavorite(event: Event, item: Item) {
+    event.stopPropagation();
+    
+    const user = this.authService.currentUser();
+    if (!user) {
+      this.showAuthModal = true;
+      return;
+    }
+
+    const isFav = this.favoriteItemIds().includes(item.id);
+    if (isFav) {
+      this.store.dispatch(FavoriteActions.removeFavorite({ itemId: item.id }));
+    } else {
+      this.store.dispatch(FavoriteActions.addFavorite({ request: { userId: user.id, itemId: item.id } }));
+    }
+  }
+
+  closeAuthModal() {
+    this.showAuthModal = false;
   }
 
   fetchCategories() {

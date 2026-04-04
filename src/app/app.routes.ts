@@ -22,6 +22,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/category-items/category-items.component').then(m => m.CategoryItemsComponent)
     },
     {
+        path: 'favorites',
+        loadComponent: () => import('./features/favorites/favorites.component').then(m => m.FavoritesComponent)
+    },
+    {
         path: 'admin',
         component: DashboardLayoutComponent,
         canActivate: [roleGuard],

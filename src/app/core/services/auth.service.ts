@@ -18,35 +18,33 @@ export class AuthService {
 
   currentUser = signal(this.storage.getUser());
 
-  // --- 1. Register ---
+
   register(data: RegisterRequest) {
     return this.http.post<AuthenticationResponse>(`${this.API_URL}/register`, data);
   }
 
-  // --- 2. Login ---
+
   login(data: LoginRequest) {
     return this.http.post<AuthenticationResponse>(`${this.API_URL}/login`, data)
       .pipe(tap(res => this.handleSuccess(res)));
   }
 
-  // --- 3. Verify Email ---
+
 
 
   verifyEmail(request: VerificationRequest): Observable<ApiResponse<any>> {
     return this.http.post<ApiResponse<any>>(`${this.API_URL}/verify-email`, request);
   }
 
-  // --- 4. Forgot Password ---
+
   forgotPassword(data: ForgotPasswordRequest) {
     return this.http.post<MessageResponse>(`${this.API_URL}/forgot-password`, data);
   }
-
-  // --- 5. Reset Password ---
   resetPassword(data: ResetPasswordRequest) {
     return this.http.post<MessageResponse>(`${this.API_URL}/reset-password`, data);
   }
 
-  // --- 6. Logout ---
+
   logout() {
     this.storage.clear();
     this.currentUser.set(null);
