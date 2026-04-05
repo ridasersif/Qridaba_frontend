@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -10,6 +10,7 @@ import { AuthService } from '../../../core/services/auth.service';
   templateUrl: './navbar.component.html'
 })
 export class NavbarComponent {
+  @Input() isDark = false;
   authService = inject(AuthService);
   router = inject(Router);
 

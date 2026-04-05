@@ -47,7 +47,7 @@
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                     {{ booking.startDate | date:'MMM d' }} - {{ booking.endDate | date:'MMM d, y' }}
                 </td>
-                <td class="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-900">£{{ booking.totalPrice }}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-900">{{ booking.totalPrice }} DH</td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm">
                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" [ngClass]="getStatusClass(booking.status)">
                     {{ booking.status }}

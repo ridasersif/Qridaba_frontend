@@ -1,55 +1,60 @@
 <!-- Header / Navbar -->
-<header class="relative z-20 w-full px-6 md:px-10 py-5 flex items-center justify-between">
+<header class="relative z-50 w-full px-6 md:px-10 py-5 flex items-center justify-between transition-all duration-300" 
+        [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
   <!-- Brand Logo -->
   <div class="flex items-center gap-2 cursor-pointer z-30" routerLink="/">
     <div class="w-10 h-10 bg-emerald-400 rounded-xl flex items-center justify-center transform rotate-3 shadow-lg">
       <span class="iconify text-slate-900 text-xl font-bold" data-icon="lucide:boxes"></span>
     </div>
-    <span class="text-2xl font-extrabold text-white tracking-tight drop-shadow-md">Qridaba.</span>
+    <span class="text-2xl font-extrabold tracking-tight drop-shadow-sm" 
+          [ngClass]="isDark ? 'text-white' : 'text-slate-900'">Qridaba.</span>
   </div>
 
   <!-- Mobile Menu Button -->
   <div class="lg:hidden z-30">
-    <button class="p-2.5 bg-white/10 backdrop-blur-md rounded-full text-white hover:bg-white/20 transition border border-white/20">
+    <button class="p-2.5 backdrop-blur-md rounded-full transition border"
+            [ngClass]="isDark ? 'bg-white/10 text-white border-white/20 hover:bg-white/20' : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'">
        <span class="iconify text-xl" data-icon="lucide:menu"></span>
     </button>
   </div>
 
   <!-- Nav Links & Actions (Hidden on Mobile) -->
-  <div class="hidden lg:flex items-center gap-6 text-white text-sm font-medium shadow-sm drop-shadow-md">
-    <a href="#" class="hover:text-emerald-300 transition">How Qridaba works</a>
-    <a href="#" class="hover:text-emerald-300 transition">Guarantee</a>
-    <a href="#" class="hover:text-emerald-300 transition">FAQ's</a>
-    <a href="#" class="hover:text-emerald-300 transition">Contact</a>
+  <div class="hidden lg:flex items-center gap-6 text-sm font-bold shadow-sm drop-shadow-md">
+    <a href="#" class="transition" [ngClass]="isDark ? 'hover:text-emerald-300' : 'hover:text-rose-500'">How Qridaba works</a>
+    <a href="#" class="transition" [ngClass]="isDark ? 'hover:text-emerald-300' : 'hover:text-rose-500'">Guarantee</a>
+    <a href="#" class="transition" [ngClass]="isDark ? 'hover:text-emerald-300' : 'hover:text-rose-500'">FAQ's</a>
+    <a href="#" class="transition" [ngClass]="isDark ? 'hover:text-emerald-300' : 'hover:text-rose-500'">Contact</a>
     
     <div class="flex items-center gap-3 ml-2">
       
       <!-- Show "Log in or register" if NOT logged in -->
-      <button routerLink="/auth/login" class="px-5 py-2.5 bg-transparent border-2 border-white/80 hover:bg-white/10 rounded-full transition backdrop-blur-sm shadow-sm" *ngIf="!authService.currentUser()">
+      <button routerLink="/auth/login" class="px-6 py-2.5 bg-transparent border-2 rounded-full transition backdrop-blur-sm shadow-sm" 
+              [ngClass]="isDark ? 'border-white/80 hover:bg-white/10 text-white' : 'border-slate-900/10 hover:bg-slate-900/5 text-slate-900'"
+              *ngIf="!authService.currentUser()">
         Log in or register
       </button>
 
       <!-- Authenticated User Options -->
       <ng-container *ngIf="authService.currentUser()">
-        <!-- If user is an Owner/Admin/SuperAdmin, show Dashboard button -->
-        <button routerLink="/owner" class="px-5 py-2.5 bg-emerald-400 hover:bg-emerald-500 text-slate-900 font-bold rounded-full transition transform hover:scale-102 active:scale-95 shadow-lg border border-emerald-300/50" *ngIf="canAccessDashboard()">
+        <!-- Dashboard Button -->
+        <button routerLink="/owner" class="px-6 py-2.5 bg-emerald-400 hover:bg-emerald-500 text-slate-900 font-black rounded-full transition transform hover:scale-105 active:scale-95 shadow-lg border border-emerald-300" *ngIf="canAccessDashboard()">
           Dashboard
         </button>
 
-        <!-- If user is ONLY a client, show My Favorites button -->
-        <button routerLink="/favorites" class="px-5 py-2.5 bg-white/20 hover:bg-white/30 text-white font-bold rounded-full transition backdrop-blur-sm shadow-sm border border-white/30" *ngIf="!canAccessDashboard()">
-          <span class="iconify inline-block mr-1 align-middle" data-icon="lucide:heart"></span> My Favorites
+        <!-- My Favorites Button -->
+        <button routerLink="/favorites" class="px-6 py-2.5 rounded-full transition backdrop-blur-sm shadow-sm border font-black flex items-center gap-2" 
+                [ngClass]="isDark ? 'bg-white/20 hover:bg-white/30 text-white border-white/30' : 'bg-rose-50 text-rose-600 border-rose-100 hover:bg-rose-100'"
+                *ngIf="!canAccessDashboard()">
+          <span class="iconify text-lg" data-icon="lucide:heart"></span> My Favorites
         </button>
         
         <!-- Logout button -->
-        <button (click)="logout()" class="px-5 py-2.5 bg-transparent border-2 border-red-400/80 text-red-100 hover:bg-red-500/20 hover:border-red-400 hover:text-white rounded-full transition backdrop-blur-sm shadow-sm">
+        <button (click)="logout()" class="px-6 py-2.5 bg-transparent border-2 rounded-full transition backdrop-blur-sm shadow-sm font-black"
+                [ngClass]="isDark ? 'border-red-400/80 text-red-100 hover:bg-red-500/20 hover:text-white' : 'border-red-100 text-red-500 hover:bg-red-50 hover:border-red-200'">
           Logout
         </button>
       </ng-container>
       
-      <button class="p-2.5 bg-white text-slate-900 rounded-full hover:bg-slate-100 transition shadow-lg shrink-0">
-         <span class="iconify text-lg" data-icon="lucide:more-horizontal"></span>
-      </button>
     </div>
   </div>
 </header>
