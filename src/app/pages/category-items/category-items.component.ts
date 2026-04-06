@@ -7,6 +7,11 @@ import { Item } from '../../core/models/item.model';
 import { Category } from '../../core/models/category.model';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { Store } from '@ngrx/store';
+import { AuthService } from '../../core/services/auth.service';
+import * as FavoriteActions from '../../core/store/favorites/favorite.actions';
+import { selectFavoriteItemIds } from '../../core/store/favorites/favorite.selectors';
+import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-category-items',
@@ -20,6 +25,12 @@ export class CategoryItemsComponent implements OnInit {
   category: Category | null = null;
   items: Item[] = [];
   loading = true;
+
+  // Favorites & Auth State
+  authService = inject(AuthService);
+  private store = inject(Store);
+  favoriteItemIds = this.store.selectSignal(selectFavoriteItemIds);
+  showAuthModal = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,6 +46,10 @@ export class CategoryItemsComponent implements OnInit {
         this.fetchCategoryItems();
       }
     });
+
+    if (this.authService.currentUser()) {
+      this.store.dispatch(FavoriteActions.loadFavorites());
+    }
   }
 
   fetchCategoryDetails() {
@@ -60,5 +75,26 @@ export class CategoryItemsComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  toggleFavorite(event: Event, item: Item) {
+    event.stopPropagation();
+    
+    const user = this.authService.currentUser();
+    if (!user) {
+      this.showAuthModal = true;
+      return;
+    }
+
+    const isFav = this.favoriteItemIds().includes(item.id);
+    if (isFav) {
+      this.store.dispatch(FavoriteActions.removeFavorite({ itemId: item.id }));
+    } else {
+      this.store.dispatch(FavoriteActions.addFavorite({ request: { userId: user.id, itemId: item.id } }));
+    }
+  }
+
+  closeAuthModal() {
+    this.showAuthModal = false;
   }
 }
